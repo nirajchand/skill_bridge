@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./backend/.env.example
+    depends_on:
+      - postgres
+    networks:
+      - skillbridge-network
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NEXT_PUBLIC_ENVIRONMENT: development
+    depends_on:
+      - backend
+    networks:
+      - skillbridge-network
+
+  postgres:
+    image: postgres:14-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: skillbridge
+      POSTGRES_USER: skillbridge_user
+      POSTGRES_PASSWORD: change_me
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - skillbridge-network
+
+volumes:
+  postgres_data:
+
+networks:
+  skillbridge-network:
+    driver: bridge
