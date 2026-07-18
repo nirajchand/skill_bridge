@@ -20,13 +20,13 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-black/60 backdrop-blur-xl">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-neutral-200 bg-white/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="group flex items-center gap-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 text-sm font-bold text-white shadow-lg shadow-indigo-500/30">
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-500 text-sm font-bold text-neutral-900 shadow-lg shadow-emerald-500/30">
             S
           </span>
-          <span className="font-display text-lg font-semibold tracking-tight text-white">SkillBridge</span>
+          <span className="font-display text-lg font-semibold tracking-tight text-neutral-900">SkillBridge</span>
         </Link>
 
         <nav className="flex items-center gap-2 text-sm">
@@ -34,13 +34,13 @@ export default function Navbar() {
             <>
               <Link
                 href="/dashboard"
-                className="rounded-lg px-4 py-2 text-neutral-300 transition hover:text-white"
+                className="rounded-lg px-4 py-2 text-neutral-700 transition hover:text-neutral-900"
               >
                 Dashboard
               </Link>
               <button
                 onClick={handleLogout}
-                className="rounded-lg px-4 py-2 text-neutral-300 transition hover:text-white"
+                className="rounded-lg px-4 py-2 text-neutral-700 transition hover:text-neutral-900"
               >
                 Logout
               </button>
@@ -49,13 +49,13 @@ export default function Navbar() {
             <>
               <Link
                 href="/auth/login"
-                className="rounded-lg px-4 py-2 text-neutral-300 transition hover:text-white"
+                className="rounded-lg px-4 py-2 text-neutral-700 transition hover:text-neutral-900"
               >
                 Sign in
               </Link>
               <Link
                 href="/auth/register"
-                className="rounded-lg bg-white px-4 py-2 font-medium text-black transition hover:bg-neutral-200"
+                className="rounded-lg bg-brand-600 px-4 py-2 font-medium text-white transition hover:bg-brand-700"
               >
                 Get started
               </Link>

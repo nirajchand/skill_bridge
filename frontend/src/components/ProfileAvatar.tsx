@@ -10,13 +10,15 @@ const SIZES: Record<string, string> = {
 };
 
 // Deterministic gradient from the name so avatars are stable per user.
+// Green-family palette so generated avatars stay on-brand while still being
+// visually distinct per user. All are dark enough for white initials to read.
 const GRADIENTS = [
-  'from-indigo-500 to-violet-500',
-  'from-emerald-500 to-teal-500',
-  'from-rose-500 to-pink-500',
-  'from-amber-500 to-orange-500',
-  'from-sky-500 to-blue-500',
-  'from-fuchsia-500 to-purple-500'
+  'from-emerald-500 to-green-600',
+  'from-emerald-600 to-teal-500',
+  'from-teal-500 to-emerald-600',
+  'from-green-500 to-emerald-700',
+  'from-lime-600 to-emerald-600',
+  'from-emerald-500 to-cyan-600'
 ];
 
 function initials(name: string) {
@@ -48,7 +50,7 @@ export default function ProfileAvatar({
       <img
         src={src}
         alt={name}
-        className={`${sizeClass} shrink-0 rounded-full object-cover ring-1 ring-white/10`}
+        className={`${sizeClass} shrink-0 rounded-full object-cover ring-1 ring-neutral-200`}
       />
     );
   }
@@ -57,7 +59,7 @@ export default function ProfileAvatar({
     <span
       className={`${sizeClass} flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${gradientFor(
         name
-      )} font-semibold text-white ring-1 ring-white/10`}
+      )} font-semibold text-neutral-900 ring-1 ring-neutral-200`}
     >
       {initials(name)}
     </span>

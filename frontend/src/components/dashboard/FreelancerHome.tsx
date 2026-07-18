@@ -16,7 +16,7 @@ const sorts = [
 ];
 
 const controlClass =
-  'rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-neutral-200 outline-none transition focus:border-indigo-500/60 focus:ring-4 focus:ring-indigo-500/10';
+  'rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm text-neutral-800 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100';
 
 export default function FreelancerHome() {
   const toast = useToast();
@@ -59,7 +59,7 @@ export default function FreelancerHome() {
     <div className="mx-auto max-w-6xl space-y-6">
       {/* Header */}
       <div>
-        <h2 className="font-display text-2xl font-semibold tracking-tight text-white">Find your next project</h2>
+        <h2 className="font-display text-2xl font-semibold tracking-tight text-neutral-900">Find your next project</h2>
         <p className="mt-1 text-sm text-neutral-500">Browse open tasks and track your active contracts.</p>
       </div>
 
@@ -90,14 +90,14 @@ export default function FreelancerHome() {
               </div>
               <select className={`${controlClass} capitalize`} value={category} onChange={(e) => setCategory(e.target.value)}>
                 {categories.map((c) => (
-                  <option key={c || 'all'} value={c} className="bg-neutral-900 capitalize">
+                  <option key={c || 'all'} value={c} className="bg-neutral-50 capitalize">
                     {c || 'All categories'}
                   </option>
                 ))}
               </select>
               <select className={controlClass} value={sort} onChange={(e) => setSort(e.target.value)}>
                 {sorts.map((s) => (
-                  <option key={s.value} value={s.value} className="bg-neutral-900">
+                  <option key={s.value} value={s.value} className="bg-neutral-50">
                     {s.label}
                   </option>
                 ))}
@@ -117,13 +117,13 @@ export default function FreelancerHome() {
                 <Link
                   key={task.id}
                   href={`/dashboard/task-detail/${task.id}`}
-                  className="group flex flex-col rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-5 transition hover:-translate-y-0.5 hover:border-white/20 hover:from-white/[0.06]"
+                  className="group flex flex-col rounded-2xl border border-neutral-200 bg-gradient-to-b from-neutral-50 to-transparent p-5 transition hover:-translate-y-0.5 hover:border-neutral-300 hover:from-neutral-100"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <h3 className="font-display text-sm font-semibold text-white">{task.title}</h3>
-                    <span className="font-display shrink-0 text-sm font-semibold text-indigo-300">{formatMoney(task.price)}</span>
+                    <h3 className="font-display text-sm font-semibold text-neutral-900">{task.title}</h3>
+                    <span className="font-display shrink-0 text-sm font-semibold text-emerald-700">{formatMoney(task.price)}</span>
                   </div>
-                  <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-neutral-400">{task.description}</p>
+                  <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-neutral-600">{task.description}</p>
                   <div className="mt-4 flex items-center justify-between">
                     <CategoryBadge category={task.category} />
                     <span className="text-xs text-neutral-500">
@@ -141,7 +141,7 @@ export default function FreelancerHome() {
           <Panel
             title="Active contracts"
             action={
-              <Link href="/dashboard/contracts" className="text-xs font-medium text-indigo-400 hover:text-indigo-300">
+              <Link href="/dashboard/contracts" className="text-xs font-medium text-emerald-600 hover:text-emerald-700">
                 View all
               </Link>
             }
@@ -149,11 +149,11 @@ export default function FreelancerHome() {
             {active.length === 0 ? (
               <p className="px-5 py-6 text-sm text-neutral-500">No active contracts yet. Apply to tasks to get started.</p>
             ) : (
-              <ul className="divide-y divide-white/5">
+              <ul className="divide-y divide-neutral-200">
                 {active.slice(0, 4).map((c) => (
                   <li key={c.id} className="flex items-center gap-3 px-5 py-3.5">
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-neutral-100">{c.task_title}</p>
+                      <p className="truncate text-sm font-medium text-neutral-900">{c.task_title}</p>
                       <p className="mt-0.5 text-xs text-neutral-500">{formatMoney(c.agreed_price)}</p>
                     </div>
                     <StatusBadge status={c.status} />
@@ -163,13 +163,13 @@ export default function FreelancerHome() {
             )}
           </Panel>
 
-          <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/15 to-cyan-500/5 p-5">
+          <div className="relative overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-500/15 to-cyan-500/5 p-5">
             <div aria-hidden className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-emerald-500/20 blur-2xl" />
-            <h4 className="font-display relative text-sm font-semibold text-white">Get paid faster</h4>
-            <p className="relative mt-2 text-xs leading-relaxed text-neutral-300">
+            <h4 className="font-display relative text-sm font-semibold text-neutral-900">Get paid faster</h4>
+            <p className="relative mt-2 text-xs leading-relaxed text-neutral-700">
               A complete profile with skills and a portfolio gets more hires. Track your balance on the Earnings page.
             </p>
-            <Link href="/dashboard/earnings" className="relative mt-3 inline-block text-xs font-medium text-emerald-300 hover:text-emerald-200">
+            <Link href="/dashboard/earnings" className="relative mt-3 inline-block text-xs font-medium text-emerald-700 hover:text-emerald-800">
               Go to Earnings →
             </Link>
           </div>

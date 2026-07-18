@@ -10,17 +10,17 @@ export default function ProfileCompletionBar({
   checklist?: ChecklistItem[];
 }) {
   const complete = percentage >= 100;
-  const barColor = complete ? 'bg-emerald-500' : percentage >= 60 ? 'bg-indigo-500' : 'bg-amber-500';
+  const barColor = complete ? 'bg-emerald-500' : percentage >= 60 ? 'bg-emerald-500' : 'bg-amber-500';
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+    <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-neutral-200">Profile completion</p>
-        <span className={`font-display text-sm font-semibold ${complete ? 'text-emerald-400' : 'text-neutral-200'}`}>
+        <p className="text-sm font-medium text-neutral-800">Profile completion</p>
+        <span className={`font-display text-sm font-semibold ${complete ? 'text-emerald-600' : 'text-neutral-800'}`}>
           {percentage}%
         </span>
       </div>
-      <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/5">
+      <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-neutral-100">
         <div className={`h-full rounded-full transition-all duration-500 ${barColor}`} style={{ width: `${percentage}%` }} />
       </div>
 
@@ -30,7 +30,7 @@ export default function ProfileCompletionBar({
             <li key={item.key} className="flex items-center gap-2 text-xs">
               <span
                 className={`flex h-4 w-4 items-center justify-center rounded-full ${
-                  item.done ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-neutral-600'
+                  item.done ? 'bg-emerald-500/20 text-emerald-600' : 'bg-neutral-100 text-neutral-400'
                 }`}
               >
                 {item.done ? (
@@ -39,13 +39,13 @@ export default function ProfileCompletionBar({
                   </svg>
                 ) : null}
               </span>
-              <span className={item.done ? 'text-neutral-500 line-through' : 'text-neutral-300'}>{item.label}</span>
+              <span className={item.done ? 'text-neutral-500 line-through' : 'text-neutral-700'}>{item.label}</span>
             </li>
           ))}
         </ul>
       )}
 
-      {complete && <p className="mt-3 text-xs text-emerald-400">🎉 Your profile is complete!</p>}
+      {complete && <p className="mt-3 text-xs text-emerald-600">🎉 Your profile is complete!</p>}
     </div>
   );
 }

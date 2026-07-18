@@ -39,7 +39,7 @@ export default function ClientHome() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="font-display text-2xl font-semibold tracking-tight text-white">Manage your tasks</h2>
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-neutral-900">Manage your tasks</h2>
           <p className="mt-1 text-sm text-neutral-500">Post work, review applicants, and release payments.</p>
         </div>
         <button onClick={() => setModalOpen(true)} className="btn-primary self-start">
@@ -81,16 +81,16 @@ export default function ClientHome() {
                 />
               </div>
             ) : (
-              <ul className="divide-y divide-white/5">
+              <ul className="divide-y divide-neutral-200">
                 {tasks.map((task) => (
                   <li key={task.id}>
                     <Link
                       href={`/dashboard/task-detail/${task.id}`}
-                      className="flex items-center gap-4 px-5 py-4 transition hover:bg-white/[0.03]"
+                      className="flex items-center gap-4 px-5 py-4 transition hover:bg-neutral-100"
                     >
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <p className="truncate text-sm font-medium text-neutral-100">{task.title}</p>
+                          <p className="truncate text-sm font-medium text-neutral-900">{task.title}</p>
                           <CategoryBadge category={task.category} />
                         </div>
                         <p className="mt-0.5 text-xs text-neutral-500">
@@ -99,7 +99,7 @@ export default function ClientHome() {
                         </p>
                       </div>
                       <StatusBadge status={task.status} />
-                      <span className="font-display shrink-0 text-sm font-semibold text-white">{formatMoney(task.price)}</span>
+                      <span className="font-display shrink-0 text-sm font-semibold text-neutral-900">{formatMoney(task.price)}</span>
                     </Link>
                   </li>
                 ))}
@@ -118,10 +118,10 @@ export default function ClientHome() {
             </div>
           </Panel>
 
-          <div className="relative overflow-hidden rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/15 to-violet-500/5 p-5">
-            <div aria-hidden className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-indigo-500/20 blur-2xl" />
-            <h4 className="font-display relative text-sm font-semibold text-white">How escrow protects you</h4>
-            <p className="relative mt-2 text-xs leading-relaxed text-neutral-300">
+          <div className="relative overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-500/15 to-emerald-500/5 p-5">
+            <div aria-hidden className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-emerald-500/20 blur-2xl" />
+            <h4 className="font-display relative text-sm font-semibold text-neutral-900">How escrow protects you</h4>
+            <p className="relative mt-2 text-xs leading-relaxed text-neutral-700">
               Funds you pay are held securely and only released to the freelancer once you approve the delivered work.
             </p>
           </div>
@@ -143,15 +143,15 @@ function RailLink({ href, label, icon }: { href: string; label: string; icon: st
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-neutral-300 transition hover:bg-white/[0.04] hover:text-white"
+      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-neutral-700 transition hover:bg-neutral-100 hover:text-neutral-900"
     >
-      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 text-neutral-400">
+      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600">
         <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.6} stroke="currentColor" className="h-4 w-4">
           <path strokeLinecap="round" strokeLinejoin="round" d={railIcons[icon]} />
         </svg>
       </span>
       <span className="flex-1">{label}</span>
-      <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} stroke="currentColor" className="h-4 w-4 text-neutral-600">
+      <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} stroke="currentColor" className="h-4 w-4 text-neutral-400">
         <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
       </svg>
     </Link>

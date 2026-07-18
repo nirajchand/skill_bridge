@@ -7,7 +7,7 @@ import { applicationsApi } from '@/lib/api';
 import { useToast } from '@/context/ToastContext';
 
 const inputClass =
-  'block w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-neutral-100 placeholder-neutral-600 outline-none transition focus:border-indigo-500/60 focus:bg-white/[0.05] focus:ring-4 focus:ring-indigo-500/10';
+  'block w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition focus:border-emerald-500 focus:bg-neutral-50 focus:ring-4 focus:ring-emerald-100';
 
 export default function ApplyModal({
   open,
@@ -52,8 +52,8 @@ export default function ApplyModal({
     <Modal open={open} onClose={onClose} title="Submit your application" description="Tell the client why you’re a great fit.">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-neutral-300">
-            Cover letter <span className="text-neutral-600">(optional)</span>
+          <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+            Cover letter <span className="text-neutral-400">(optional)</span>
           </label>
           <textarea
             className={`${inputClass} min-h-[120px] resize-y`}
@@ -65,8 +65,8 @@ export default function ApplyModal({
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-neutral-300">
-            Proposed price <span className="text-neutral-600">(optional — posting price is ${Number(taskPrice)})</span>
+          <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+            Proposed price <span className="text-neutral-400">(optional — posting price is ${Number(taskPrice)})</span>
           </label>
           <input
             className={inputClass}
@@ -84,16 +84,16 @@ export default function ApplyModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-white/10 px-4 py-2.5 text-sm text-neutral-300 transition hover:bg-white/5"
+            className="rounded-xl border border-neutral-200 px-4 py-2.5 text-sm text-neutral-700 transition hover:bg-neutral-100"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-neutral-200 disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:opacity-60"
           >
-            {submitting && <Spinner className="h-4 w-4 border-black/30 border-t-black" />}
+            {submitting && <Spinner className="h-4 w-4 border-white/30 border-t-white" />}
             Submit application
           </button>
         </div>

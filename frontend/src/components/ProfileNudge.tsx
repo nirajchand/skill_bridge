@@ -14,7 +14,7 @@ export default function ProfileNudge() {
 
   return (
     <div className="mx-auto mb-6 max-w-5xl">
-      <div className="flex flex-col gap-3 rounded-2xl border border-indigo-500/20 bg-indigo-500/[0.07] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <div className="relative h-10 w-10 shrink-0">
             <svg viewBox="0 0 36 36" className="h-10 w-10 -rotate-90">
@@ -30,16 +30,16 @@ export default function ProfileNudge() {
                 strokeDasharray={`${(pct / 100) * 94.2} 94.2`}
               />
             </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-semibold text-indigo-200">{pct}%</span>
+            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-semibold text-emerald-800">{pct}%</span>
           </div>
           <div>
-            <p className="text-sm font-medium text-white">Your profile is {pct}% complete</p>
-            <p className="text-xs text-neutral-400">Complete it to attract better opportunities.</p>
+            <p className="text-sm font-medium text-neutral-900">Your profile is {pct}% complete</p>
+            <p className="text-xs text-neutral-600">Complete it to attract better opportunities.</p>
           </div>
         </div>
         <Link
           href="/dashboard/settings"
-          className="shrink-0 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-neutral-200"
+          className="shrink-0 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
         >
           Complete profile
         </Link>

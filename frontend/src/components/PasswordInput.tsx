@@ -31,8 +31,8 @@ export default function PasswordInput({
           type={visible ? 'text' : 'password'}
           autoComplete={autoComplete}
           required
-          className={`block w-full rounded-xl border bg-white/[0.03] px-4 py-3 pr-12 text-sm text-neutral-100 placeholder-neutral-600 outline-none transition duration-200 focus:border-indigo-500/60 focus:bg-white/[0.05] focus:ring-4 focus:ring-indigo-500/10 ${
-            error ? 'border-rose-500/50' : 'border-white/10'
+          className={`block w-full rounded-xl border bg-neutral-50 px-4 py-3 pr-12 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition duration-200 focus:border-emerald-500 focus:bg-neutral-50 focus:ring-4 focus:ring-emerald-100 ${
+            error ? 'border-rose-400' : 'border-neutral-200'
           }`}
           placeholder={placeholder}
           value={value}
@@ -42,7 +42,7 @@ export default function PasswordInput({
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
-          className="absolute inset-y-0 right-0 flex items-center px-4 text-neutral-500 transition hover:text-neutral-300"
+          className="absolute inset-y-0 right-0 flex items-center px-4 text-neutral-500 transition hover:text-neutral-700"
           aria-label={visible ? 'Hide password' : 'Show password'}
           tabIndex={-1}
         >
@@ -62,7 +62,7 @@ export default function PasswordInput({
           )}
         </button>
       </div>
-      {error && <p className="mt-1.5 text-xs text-rose-400">{error}</p>}
+      {error && <p className="mt-1.5 text-xs text-rose-600">{error}</p>}
     </div>
   );
 }

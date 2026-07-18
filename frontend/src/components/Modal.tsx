@@ -28,20 +28,20 @@ export default function Modal({ open, onClose, title, description, children, max
 
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
-      <div className="animate-fade-in absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="animate-fade-in absolute inset-0 bg-white/80 backdrop-blur-sm" onClick={onClose} />
       <div
         role="dialog"
         aria-modal="true"
-        className={`animate-scale-in relative w-full ${maxWidth} max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-neutral-950 p-6 shadow-2xl shadow-black/70`}
+        className={`animate-scale-in relative w-full ${maxWidth} max-h-[90vh] overflow-y-auto rounded-2xl border border-neutral-200 bg-white p-6 shadow-2xl shadow-black/70`}
       >
         <div className="mb-5 flex items-start justify-between gap-4">
           <div>
-            <h2 className="font-display text-lg font-semibold text-white">{title}</h2>
+            <h2 className="font-display text-lg font-semibold text-neutral-900">{title}</h2>
             {description && <p className="mt-1 text-sm text-neutral-500">{description}</p>}
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-neutral-500 transition hover:bg-white/5 hover:text-neutral-300"
+            className="rounded-lg p-1.5 text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-700"
             aria-label="Close"
           >
             <svg viewBox="0 0 24 24" fill="none" strokeWidth={2} stroke="currentColor" className="h-5 w-5">

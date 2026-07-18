@@ -17,7 +17,7 @@ const reasons = [
 ];
 
 const inputClass =
-  'block w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-neutral-100 placeholder-neutral-600 outline-none transition focus:border-indigo-500/60 focus:bg-white/[0.05] focus:ring-4 focus:ring-indigo-500/10';
+  'block w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition focus:border-emerald-500 focus:bg-neutral-50 focus:ring-4 focus:ring-emerald-100';
 
 export default function RaiseDisputeModal({
   open,
@@ -59,18 +59,18 @@ export default function RaiseDisputeModal({
     <Modal open={open} onClose={onClose} title="Raise a dispute" description="Explain the issue and provide detail.">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-neutral-300">Reason</label>
+          <label className="mb-1.5 block text-sm font-medium text-neutral-700">Reason</label>
           <select className={inputClass} value={reason} onChange={(e) => setReason(e.target.value)}>
             {reasons.map((r) => (
-              <option key={r} value={r} className="bg-neutral-900">
+              <option key={r} value={r} className="bg-neutral-50">
                 {r}
               </option>
             ))}
           </select>
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-neutral-300">
-            Description <span className="text-neutral-600">({description.length} chars, min 20)</span>
+          <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+            Description <span className="text-neutral-400">({description.length} chars, min 20)</span>
           </label>
           <textarea
             className={`${inputClass} min-h-[110px] resize-y`}
@@ -81,7 +81,7 @@ export default function RaiseDisputeModal({
           />
         </div>
         <div className="flex justify-end gap-3 pt-2">
-          <button type="button" onClick={onClose} className="rounded-xl border border-white/10 px-4 py-2.5 text-sm text-neutral-300 transition hover:bg-white/5">
+          <button type="button" onClick={onClose} className="rounded-xl border border-neutral-200 px-4 py-2.5 text-sm text-neutral-700 transition hover:bg-neutral-100">
             Cancel
           </button>
           <button

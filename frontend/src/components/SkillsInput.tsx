@@ -46,11 +46,11 @@ export default function SkillsInput({
 
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-2.5 focus-within:border-indigo-500/60 focus-within:ring-4 focus-within:ring-indigo-500/10">
+      <div className="flex flex-wrap items-center gap-2 rounded-xl border border-neutral-200 bg-neutral-50 p-2.5 focus-within:border-emerald-500 focus-within:ring-4 focus-within:ring-emerald-100">
         {value.map((skill) => (
-          <span key={skill} className="flex items-center gap-1.5 rounded-lg bg-indigo-500/15 px-2.5 py-1 text-xs font-medium text-indigo-200">
+          <span key={skill} className="flex items-center gap-1.5 rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-800">
             {skill}
-            <button type="button" onClick={() => remove(skill)} className="text-indigo-300/70 hover:text-white" aria-label={`Remove ${skill}`}>
+            <button type="button" onClick={() => remove(skill)} className="text-emerald-700/70 hover:text-neutral-900" aria-label={`Remove ${skill}`}>
               <svg viewBox="0 0 24 24" fill="none" strokeWidth={2.5} stroke="currentColor" className="h-3 w-3">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -59,7 +59,7 @@ export default function SkillsInput({
         ))}
         {value.length < max && (
           <input
-            className="min-w-[120px] flex-1 bg-transparent px-1 py-1 text-sm text-neutral-100 placeholder-neutral-600 outline-none"
+            className="min-w-[120px] flex-1 bg-transparent px-1 py-1 text-sm text-neutral-900 placeholder-neutral-400 outline-none"
             placeholder={value.length ? 'Add another…' : 'Type a skill and press Enter'}
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -75,14 +75,14 @@ export default function SkillsInput({
               key={s}
               type="button"
               onClick={() => add(s)}
-              className="rounded-lg border border-white/10 px-2.5 py-1 text-xs text-neutral-400 transition hover:border-white/20 hover:text-neutral-200"
+              className="rounded-lg border border-neutral-200 px-2.5 py-1 text-xs text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-800"
             >
               + {s}
             </button>
           ))}
         </div>
       )}
-      <p className="mt-1.5 text-xs text-neutral-600">
+      <p className="mt-1.5 text-xs text-neutral-400">
         {value.length}/{max} skills
       </p>
     </div>

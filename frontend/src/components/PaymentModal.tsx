@@ -11,15 +11,22 @@ import { useToast } from '@/context/ToastContext';
 const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
 
+/**
+ * Stripe renders the card inputs inside its own iframe, so it cannot inherit our
+ * CSS — these colours must be passed explicitly and kept in sync with the theme
+ * by hand. (They were left at the old dark-theme values, which meant near-white
+ * text on our near-white field: you could click and type, but saw nothing.)
+ */
 const cardStyle = {
   style: {
     base: {
-      color: '#f5f5f5',
+      color: '#171717', // --text, matches every other input
       fontFamily: 'inherit',
       fontSize: '15px',
-      '::placeholder': { color: '#6b7280' }
+      iconColor: '#059669', // brand green card/brand icons
+      '::placeholder': { color: '#a3a3a3' } // neutral-400, same as our placeholders
     },
-    invalid: { color: '#fb7185' }
+    invalid: { color: '#e11d48', iconColor: '#e11d48' } // rose-600: readable on white
   }
 };
 
@@ -72,20 +79,20 @@ function CheckoutForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+      <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-neutral-400">Amount to fund</span>
-          <span className="font-display text-lg font-semibold text-white">{formatMoney(amount)}</span>
+          <span className="text-neutral-600">Amount to fund</span>
+          <span className="font-display text-lg font-semibold text-neutral-900">{formatMoney(amount)}</span>
         </div>
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-neutral-300">Card details</label>
-        <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5 transition focus-within:border-indigo-500/60 focus-within:ring-4 focus-within:ring-indigo-500/10">
+        <label className="mb-1.5 block text-sm font-medium text-neutral-700">Card details</label>
+        <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3.5 transition focus-within:border-emerald-500 focus-within:ring-4 focus-within:ring-emerald-100">
           <CardElement options={cardStyle} />
         </div>
-        <p className="mt-2 text-xs text-neutral-600">
-          Test card: <span className="text-neutral-400">4242 4242 4242 4242</span> · any future date · any CVC/ZIP
+        <p className="mt-2 text-xs text-neutral-400">
+          Test card: <span className="text-neutral-600">4242 4242 4242 4242</span> · any future date · any CVC/ZIP
         </p>
       </div>
 
@@ -93,7 +100,7 @@ function CheckoutForm({
         <button
           type="button"
           onClick={onClose}
-          className="rounded-xl border border-white/10 px-4 py-2.5 text-sm text-neutral-300 transition hover:bg-white/5"
+          className="rounded-xl border border-neutral-200 px-4 py-2.5 text-sm text-neutral-700 transition hover:bg-neutral-100"
         >
           Cancel
         </button>
@@ -122,7 +129,7 @@ export default function PaymentModal({
   return (
     <Modal open={open} onClose={onClose} title="Fund escrow" description="Your payment is held securely until you approve the work.">
       {!stripePromise ? (
-        <p className="text-sm text-rose-300">
+        <p className="text-sm text-rose-700">
           Stripe is not configured. Add NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY to <code>frontend/.env.local</code>.
         </p>
       ) : (

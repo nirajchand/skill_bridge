@@ -63,12 +63,12 @@ export default function Sidebar() {
   const items = navFor(user?.role);
 
   return (
-    <aside className="sticky top-3 hidden h-[calc(100vh-1.5rem)] w-64 shrink-0 flex-col rounded-2xl border border-white/10 bg-neutral-950/60 p-4 md:flex">
+    <aside className="sticky top-3 hidden h-[calc(100vh-1.5rem)] w-64 shrink-0 flex-col rounded-2xl border border-neutral-200 bg-white/60 p-4 md:flex">
       <Link href="/" className="mb-8 flex items-center gap-2.5 px-2 pt-2">
-        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 text-sm font-bold text-white shadow-lg shadow-indigo-500/30">
+        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-500 text-sm font-bold text-neutral-900 shadow-lg shadow-emerald-500/30">
           S
         </span>
-        <span className="font-display text-lg font-semibold tracking-tight text-white">SkillBridge</span>
+        <span className="font-display text-lg font-semibold tracking-tight text-neutral-900">SkillBridge</span>
       </Link>
 
       <nav className="flex flex-1 flex-col gap-1">
@@ -81,7 +81,7 @@ export default function Sidebar() {
               </svg>
               <span className="flex-1">{item.label}</span>
               {item.soon && (
-                <span className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] font-medium text-neutral-500">
+                <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium text-neutral-500">
                   Soon
                 </span>
               )}
@@ -92,7 +92,7 @@ export default function Sidebar() {
             return (
               <span
                 key={item.label}
-                className="flex cursor-default items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-neutral-600"
+                className="flex cursor-default items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-neutral-400"
               >
                 {content}
               </span>
@@ -105,8 +105,8 @@ export default function Sidebar() {
               href={item.href}
               className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition duration-200 ${
                 active
-                  ? 'bg-white/[0.06] text-white'
-                  : 'text-neutral-400 hover:bg-white/[0.03] hover:text-neutral-200'
+                  ? 'bg-neutral-100 text-neutral-900'
+                  : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-800'
               }`}
             >
               {content}
@@ -115,9 +115,9 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3">
+      <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-3">
         <p className="text-xs text-neutral-500">Signed in as</p>
-        <p className="truncate text-sm font-medium text-neutral-200">{user?.email ?? '—'}</p>
+        <p className="truncate text-sm font-medium text-neutral-800">{user?.email ?? '—'}</p>
       </div>
     </aside>
   );
