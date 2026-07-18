@@ -12,4 +12,7 @@ function requireRole(allowedRoles) {
   };
 }
 
-module.exports = { requireRole };
+// Convenience wrapper for admin-only routes.
+const requireAdmin = requireRole(['admin']);
+
+module.exports = { requireRole, requireAdmin };

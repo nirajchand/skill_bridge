@@ -1,9 +1,17 @@
 const JWTService = require('../services/jwtService');
+const { ACCESS_COOKIE } = require('../utils/cookies');
+
+// Prefer the httpOnly cookie (browser); fall back to a Bearer header for
+// non-browser API clients (curl, mobile). Browsers never expose the cookie to JS.
+function extractToken(req) {
+  if (req.cookies && req.cookies[ACCESS_COOKIE]) return req.cookies[ACCESS_COOKIE];
+  const authHeader = req.headers['authorization'];
+  if (authHeader && authHeader.startsWith('Bearer ')) return authHeader.slice(7);
+  return null;
+}
 
 function verifyToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
-
+  const token = extractToken(req);
   if (!token) {
     return res.status(401).json({ error: 'No token provided' });
   }
@@ -11,6 +19,11 @@ function verifyToken(req, res, next) {
   const decoded = JWTService.verifyAccessToken(token);
   if (!decoded) {
     return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+
+  // Reject non-session tokens (e.g. the short-lived MFA challenge token).
+  if (decoded.purpose) {
+    return res.status(401).json({ error: 'Invalid token type' });
   }
 
   req.user = decoded;
