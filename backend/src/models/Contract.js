@@ -1,13 +1,26 @@
 const db = require('../db/connection');
+const { displayNameSql } = require('../utils/sql');
 
 class Contract {
-  static async create(data) {
-    const [contract] = await db('contracts').insert(data).returning('*');
+  // Every writer accepts an optional Knex transaction (`trx`). Defaulting to the
+  // pooled `db` keeps single-write callers unchanged, while multi-step flows can
+  // pass a trx so all writes commit or roll back as one atomic unit.
+  static async create(data, trx = db) {
+    const [contract] = await trx('contracts').insert(data).returning('*');
     return contract;
   }
 
   static async findRawById(id) {
     return db('contracts').where({ id }).first();
+  }
+
+  // Lookups used by the Stripe webhook to map events back to a contract.
+  static async findByPaymentIntent(paymentIntentId) {
+    return db('contracts').where({ stripe_payment_intent_id: paymentIntentId }).first();
+  }
+
+  static async findByChargeId(chargeId) {
+    return db('contracts').where({ stripe_charge_id: chargeId }).first();
   }
 
   // Full detail with task title and both party emails.
@@ -20,8 +33,8 @@ class Contract {
       .select(
         'contracts.*',
         db.raw('tasks.title as task_title'),
-        db.raw('client.email as client_email'),
-        db.raw('freelancer.email as freelancer_email')
+        db.raw(displayNameSql('client', 'client_name')),
+        db.raw(displayNameSql('freelancer', 'freelancer_name'))
       )
       .first();
   }
@@ -37,14 +50,14 @@ class Contract {
       .select(
         'contracts.*',
         db.raw('tasks.title as task_title'),
-        db.raw('client.email as client_email'),
-        db.raw('freelancer.email as freelancer_email')
+        db.raw(displayNameSql('client', 'client_name')),
+        db.raw(displayNameSql('freelancer', 'freelancer_name'))
       )
       .orderBy('contracts.created_at', 'desc');
   }
 
-  static async update(id, data) {
-    const [contract] = await db('contracts')
+  static async update(id, data, trx = db) {
+    const [contract] = await trx('contracts')
       .where({ id })
       .update({ ...data, updated_at: db.fn.now() })
       .returning('*');

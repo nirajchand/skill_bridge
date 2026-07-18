@@ -1,4 +1,5 @@
 const db = require('../db/connection');
+const { displayNameSql } = require('../utils/sql');
 
 class Application {
   static async create(data) {
@@ -22,7 +23,7 @@ class Application {
       .where('applications.task_id', taskId)
       .select(
         'applications.*',
-        db.raw('users.email as freelancer_email')
+        db.raw(displayNameSql('users', 'freelancer_name'))
       )
       .orderBy('applications.created_at', 'desc');
   }
@@ -38,13 +39,14 @@ class Application {
         db.raw('tasks.title as task_title'),
         db.raw('tasks.price as task_price'),
         db.raw('tasks.status as task_status'),
-        db.raw('users.email as client_email')
+        db.raw(displayNameSql('users', 'client_name'))
       )
       .orderBy('applications.created_at', 'desc');
   }
 
-  static async setStatus(id, status) {
-    const [application] = await db('applications')
+  // `trx` lets the hire flow run this inside an atomic transaction.
+  static async setStatus(id, status, trx = db) {
+    const [application] = await trx('applications')
       .where({ id })
       .update({ status, updated_at: db.fn.now() })
       .returning('*');
@@ -52,8 +54,8 @@ class Application {
   }
 
   // Reject every other pending application on a task (after a hire).
-  static async rejectOthers(taskId, exceptId) {
-    return db('applications')
+  static async rejectOthers(taskId, exceptId, trx = db) {
+    return trx('applications')
       .where({ task_id: taskId, status: 'pending' })
       .whereNot({ id: exceptId })
       .update({ status: 'rejected', updated_at: db.fn.now() });

@@ -1,8 +1,8 @@
 const db = require('../db/connection');
 
 class Dispute {
-  static async create(data) {
-    const [dispute] = await db('disputes').insert(data).returning('*');
+  static async create(data, trx = db) {
+    const [dispute] = await trx('disputes').insert(data).returning('*');
     return dispute;
   }
 
@@ -37,6 +37,33 @@ class Dispute {
 
   static async findByContract(contractId) {
     return db('disputes').where({ contract_id: contractId }).first();
+  }
+
+  // Admin: list disputes with task + party emails, optional status filter.
+  static async listAll({ status } = {}) {
+    const q = db('disputes')
+      .join('contracts', 'contracts.id', 'disputes.contract_id')
+      .join('tasks', 'tasks.id', 'contracts.task_id')
+      .join('users as client', 'client.id', 'contracts.client_id')
+      .join('users as freelancer', 'freelancer.id', 'contracts.freelancer_id')
+      .select(
+        'disputes.*',
+        db.raw('tasks.title as task_title'),
+        db.raw('contracts.agreed_price as agreed_price'),
+        db.raw('client.email as client_email'),
+        db.raw('freelancer.email as freelancer_email')
+      )
+      .orderBy('disputes.created_at', 'asc');
+    if (status) q.where('disputes.status', status);
+    return q;
+  }
+
+  static async update(id, fields, trx = db) {
+    const [dispute] = await trx('disputes')
+      .where({ id })
+      .update({ ...fields, updated_at: db.fn.now() })
+      .returning('*');
+    return dispute;
   }
 }
 

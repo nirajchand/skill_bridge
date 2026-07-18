@@ -1,8 +1,8 @@
 const db = require('../db/connection');
 
 class WorkSubmission {
-  static async create(data) {
-    const [submission] = await db('work_submissions').insert(data).returning('*');
+  static async create(data, trx = db) {
+    const [submission] = await trx('work_submissions').insert(data).returning('*');
     return submission;
   }
 
@@ -12,8 +12,8 @@ class WorkSubmission {
       .orderBy('submitted_at', 'desc');
   }
 
-  static async setStatus(id, status) {
-    const [submission] = await db('work_submissions').where({ id }).update({ status }).returning('*');
+  static async setStatus(id, status, trx = db) {
+    const [submission] = await trx('work_submissions').where({ id }).update({ status }).returning('*');
     return submission;
   }
 }

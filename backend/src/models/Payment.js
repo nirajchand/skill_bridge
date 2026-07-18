@@ -1,8 +1,8 @@
 const db = require('../db/connection');
 
 class Payment {
-  static async create(data) {
-    const [payment] = await db('payments')
+  static async create(data, trx = db) {
+    const [payment] = await trx('payments')
       .insert({ ...data, completed_at: data.payment_status === 'succeeded' ? db.fn.now() : null })
       .returning('*');
     return payment;
@@ -10,6 +10,11 @@ class Payment {
 
   static async findByContract(contractId) {
     return db('payments').where({ contract_id: contractId }).orderBy('created_at', 'desc');
+  }
+
+  // Idempotency helper for the Stripe webhook: has this intent already been recorded?
+  static async findByIntent(paymentIntentId, paymentType = 'initial') {
+    return db('payments').where({ stripe_payment_intent_id: paymentIntentId, payment_type: paymentType }).first();
   }
 
   // Total released to a freelancer (money they've earned).

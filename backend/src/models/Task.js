@@ -1,4 +1,5 @@
 const db = require('../db/connection');
+const { displayNameSql } = require('../utils/sql');
 
 const PUBLIC_COLUMNS = [
   'tasks.id',
@@ -27,10 +28,13 @@ class Task {
       .leftJoin('applications', 'applications.task_id', 'tasks.id')
       .where('tasks.status', 'open')
       .whereNull('tasks.deleted_at')
-      .groupBy('tasks.id', 'users.email')
+      // Both columns feeding the client_name expression must be grouped, or
+      // Postgres rejects the query ("must appear in the GROUP BY clause").
+      .groupBy('tasks.id', 'users.display_name', 'users.email')
       .select(
         ...PUBLIC_COLUMNS,
-        db.raw('users.email as client_email'),
+        // Privacy: expose the poster's display name, never their email.
+        db.raw(displayNameSql('users', 'client_name')),
         db.raw('count(applications.id)::int as applicant_count')
       );
 
@@ -76,7 +80,7 @@ class Task {
       .join('users', 'users.id', 'tasks.client_id')
       .where('tasks.id', id)
       .whereNull('tasks.deleted_at')
-      .select(...PUBLIC_COLUMNS, db.raw('users.email as client_email'))
+      .select(...PUBLIC_COLUMNS, db.raw(displayNameSql('users', 'client_name')))
       .first();
   }
 
@@ -84,16 +88,23 @@ class Task {
     return db('tasks').where({ id }).whereNull('deleted_at').first();
   }
 
-  static async update(id, data) {
-    const [task] = await db('tasks')
+  static async update(id, data, trx = db) {
+    const [task] = await trx('tasks')
       .where({ id })
       .update({ ...data, updated_at: db.fn.now() })
       .returning('*');
     return task;
   }
 
-  static async setStatus(id, status) {
-    return this.update(id, { status });
+  static async setStatus(id, status, trx = db) {
+    return this.update(id, { status }, trx);
+  }
+
+  // Row-level lock (SELECT … FOR UPDATE). Used inside the hire transaction so two
+  // concurrent "accept" requests on the same task serialise instead of racing —
+  // without this, both could pass the status==='open' check and double-hire.
+  static async lockById(id, trx) {
+    return trx('tasks').where({ id }).whereNull('deleted_at').forUpdate().first();
   }
 
   static async softDelete(id) {
