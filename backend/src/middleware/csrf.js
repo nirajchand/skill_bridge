@@ -32,8 +32,14 @@ const CSRF_HEADER = 'x-csrf-token';
 // Methods that cannot change state need no protection.
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 
-// These are authenticated by other means (HMAC signature) and have no cookie.
-const EXEMPT_PATHS = [/^\/webhooks\//];
+// Exempt from the double-submit check:
+//  - /webhooks/*      authenticated by HMAC signature, no cookie involved.
+//  - /api/auth/oauth/* the OAuth flow is session-ESTABLISHING, not an action on
+//    an existing session, so it carries its own CSRF defence instead: the `state`
+//    parameter on the redirect and an unguessable, single-use signed `ticket` on
+//    /complete. A stale access_token cookie from a previous login must not make
+//    the double-submit check demand a header this pre-session flow cannot send.
+const EXEMPT_PATHS = [/^\/webhooks\//, /^\/api\/auth\/oauth\//];
 
 function sign(value, secret) {
   return crypto.createHmac('sha256', secret).update(value).digest('hex');
