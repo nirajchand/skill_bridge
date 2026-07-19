@@ -1,25 +1,22 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const { secrets } = require('../config/secrets');
 
+// Secrets are validated at startup by config/secrets.js — no hardcoded fallbacks.
 class JWTService {
   static generateAccessToken(userId, role) {
-    return jwt.sign(
-      { userId, role },
-      process.env.JWT_SECRET || 'dev-secret-change-in-production',
-      { expiresIn: '15m' }
-    );
+    return jwt.sign({ userId, role }, secrets.jwtSecret, { expiresIn: '15m' });
   }
 
-  static generateRefreshToken(userId) {
-    return jwt.sign(
-      { userId },
-      process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET || 'dev-refresh-secret-change-in-production',
-      { expiresIn: '7d' }
-    );
+  // Refresh tokens carry a unique jti so each one can be tracked/revoked server-side.
+  static generateRefreshToken(userId, jti = crypto.randomUUID()) {
+    const token = jwt.sign({ userId, jti }, secrets.jwtRefreshSecret, { expiresIn: '7d' });
+    return { token, jti };
   }
 
   static verifyAccessToken(token) {
     try {
-      return jwt.verify(token, process.env.JWT_SECRET || 'dev-secret-change-in-production');
+      return jwt.verify(token, secrets.jwtSecret);
     } catch (err) {
       return null;
     }
@@ -27,13 +24,14 @@ class JWTService {
 
   static verifyRefreshToken(token) {
     try {
-      return jwt.verify(
-        token,
-        process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET || 'dev-refresh-secret-change-in-production'
-      );
+      return jwt.verify(token, secrets.jwtRefreshSecret);
     } catch (err) {
       return null;
     }
+  }
+
+  static hashToken(token) {
+    return crypto.createHash('sha256').update(token).digest('hex');
   }
 }
 
