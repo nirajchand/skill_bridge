@@ -8,9 +8,10 @@ const profileService = require('../services/profileService');
 const { verifyToken, requireAuth } = require('../middleware/auth');
 const { requireRole } = require('../middleware/rbac');
 const { uploadImage, uploadCv, UPLOAD_DIR } = require('../middleware/upload');
+const { validate } = require('../middleware/validate');
+const schemas = require('../validation/schemas');
+const { checkUserSuppliedUrl } = require('../utils/ssrfGuard');
 const { ok, fail } = require('../utils/http');
-
-const isValidUrl = (v) => /^https?:\/\/.+/i.test(v);
 
 function fileUrl(req, filename) {
   return `${req.protocol}://${req.get('host')}/uploads/${filename}`;
@@ -38,69 +39,36 @@ router.get('/me/profile', verifyToken, requireAuth, async (req, res) => {
 });
 
 // PATCH /api/users/me/profile — update profile fields
-router.patch('/me/profile', verifyToken, requireAuth, async (req, res) => {
+router.patch('/me/profile', verifyToken, requireAuth, validate(schemas.updateProfile), async (req, res) => {
   try {
     const user = await User.findById(req.user.userId);
     if (!user) return fail(res, 'User not found', 404);
 
-    const {
-      display_name,
-      bio,
-      location,
-      skills,
-      hourly_rate,
-      portfolio_url,
-      company_name,
-      company_website
-    } = req.body;
-    const updates = {};
+    // req.body is Joi-validated and stripped of unknown keys.
+    const body = req.body;
 
-    if (display_name !== undefined) {
-      if (display_name.trim().length < 2 || display_name.length > 100) {
-        return fail(res, 'Display name must be 2-100 characters');
-      }
-      updates.display_name = display_name.trim();
-    }
-    if (bio !== undefined) {
-      if (bio.length > 500) return fail(res, 'Bio cannot exceed 500 characters');
-      updates.bio = bio.trim() || null;
-    }
-    if (location !== undefined) {
-      if (location.length > 100) return fail(res, 'Location must be 100 characters or less');
-      updates.location = location.trim() || null;
-    }
-    if (skills !== undefined) {
-      if (!Array.isArray(skills)) return fail(res, 'Skills must be an array');
-      const cleaned = skills.map((s) => String(s).trim()).filter(Boolean);
-      if (cleaned.length > 10) return fail(res, 'You can list up to 10 skills');
-      if (cleaned.some((s) => s.length < 2 || s.length > 50)) {
-        return fail(res, 'Each skill must be 2-50 characters');
-      }
-      updates.skills = JSON.stringify(cleaned);
-    }
-    if (hourly_rate !== undefined) {
-      if (hourly_rate === null || hourly_rate === '') {
-        updates.hourly_rate = null;
-      } else {
-        const rate = Number(hourly_rate);
-        if (!Number.isFinite(rate) || rate < 5 || rate > 500) {
-          return fail(res, 'Hourly rate must be between $5 and $500');
-        }
-        updates.hourly_rate = rate;
+    // SSRF defence-in-depth: Joi proves these are syntactically valid http(s)
+    // URLs, but not WHERE they point. Reject links aimed at internal hosts or the
+    // cloud metadata endpoint before they are stored — otherwise they sit in the
+    // DB waiting for an admin to click them, or for any future server-side
+    // fetch/preview feature to turn them into a live SSRF.
+    for (const field of ['portfolio_url', 'company_website']) {
+      if (body[field]) {
+        // eslint-disable-next-line no-await-in-loop
+        const check = await checkUserSuppliedUrl(body[field]);
+        if (!check.safe) return fail(res, `${field.replace('_', ' ')}: ${check.reason}`);
       }
     }
-    if (portfolio_url !== undefined) {
-      if (portfolio_url && !isValidUrl(portfolio_url)) return fail(res, 'Please enter a valid portfolio URL');
-      updates.portfolio_url = portfolio_url || null;
-    }
-    if (company_website !== undefined) {
-      if (company_website && !isValidUrl(company_website)) return fail(res, 'Please enter a valid website URL');
-      updates.company_website = company_website || null;
-    }
-    if (company_name !== undefined) {
-      if (company_name.length > 200) return fail(res, 'Company name too long');
-      updates.company_name = company_name.trim() || null;
-    }
+
+    const updates = {};
+    if ('display_name' in body) updates.display_name = body.display_name.trim();
+    if ('bio' in body) updates.bio = (body.bio || '').trim() || null;
+    if ('location' in body) updates.location = (body.location || '').trim() || null;
+    if ('skills' in body) updates.skills = JSON.stringify((body.skills || []).map((s) => s.trim()).filter(Boolean));
+    if ('hourly_rate' in body) updates.hourly_rate = body.hourly_rate === '' || body.hourly_rate == null ? null : body.hourly_rate;
+    if ('portfolio_url' in body) updates.portfolio_url = body.portfolio_url || null;
+    if ('company_website' in body) updates.company_website = body.company_website || null;
+    if ('company_name' in body) updates.company_name = (body.company_name || '').trim() || null;
 
     const updatedRow = await User.updateProfile(req.user.userId, updates);
     const pct = profileService.calcCompletion(updatedRow);
