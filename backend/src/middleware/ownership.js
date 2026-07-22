@@ -9,7 +9,8 @@
  */
 const { fail } = require('../utils/http');
 
-function authorizeResource({ loader, idParam = 'id', ownerFields = [], allowRoles = [], attachAs = 'resource' }) {
+function authorizeResource({ loader, idParam = 'id', ownerFields = [], 
+  allowRoles = [], attachAs = 'resource' }) {
   const fields = Array.isArray(ownerFields) ? ownerFields : [ownerFields];
   return async (req, res, next) => {
     try {
